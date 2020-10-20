@@ -19,7 +19,7 @@
         <td><%= link_to event["id"], event_path(id: event["id"]) %></td>
         <td><%= event["type"] %></td>
         <td><%= event["title"] %></td>
-        <td><%= event["start"].strftime("%a %b %e %Y %l:%m%P") || []%></td>
+        <td><%= event["start"].strftime("%a %b %e %Y %l:%M%P") || []%></td>
       </tr>
     <% end %>
   </tbody>
