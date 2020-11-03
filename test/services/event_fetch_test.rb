@@ -25,10 +25,14 @@ class EventFetchTest < ActiveSupport::TestCase
 
   test "fetches and removes dates > today " do
     assert_equal 3, @response.size
+    @response.each do |event|
+      assert event["start"] < Time.now
+    end
   end
 
   test "fetches and reverse orders remaining by date" do
     assert_equal [3,2,1], @response.map{ |i| i["id"] }
+    assert_equal @response, @response.sort_by { |h| h["start"] }.reverse
   end
 
   test "get activity detail" do
