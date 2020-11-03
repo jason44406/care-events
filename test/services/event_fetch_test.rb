@@ -4,16 +4,17 @@ class EventFetchTest < ActiveSupport::TestCase
     @event_index_body =
       {'page':1,'total':1,'last_page':false,'series':
         ['id':1,'sessions':[
-          {'id':1,'start_time': 1596553200 },
-          {'id':2,'start_time': 1598994079 } ]
+          {'id':1,'start_time': 1.week.ago.to_i },
+          {'id':2,'start_time': 1.day.ago.to_i } ]
         ]
       }.to_json
 
       @event_index_body_last_page =
       {'page':2,'total':1,'last_page':true,'activities':
         [
-          {'id':3,'start_time': 1602363679 },
-          {'id':4,'start_time': 33160050807 }
+          {'id':3,'start_time': 1.hour.ago.to_i },
+          {'id':4,'start_time': 1.hour.since.to_i },
+          {'id':5,'start_time': 1.day.since.to_i }
         ]
       }.to_json
 
