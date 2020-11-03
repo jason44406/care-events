@@ -4,16 +4,17 @@ class EventFetchTest < ActiveSupport::TestCase
     @event_index_body =
       {'page':1,'total':1,'last_page':false,'series':
         ['id':1,'sessions':[
-          {'id':1,'start_time': 1596553200 },
-          {'id':2,'start_time': 1598994079 } ]
+          {'id':1,'start_time': 1.week.ago.to_i },
+          {'id':2,'start_time': 1.day.ago.to_i } ]
         ]
       }.to_json
 
       @event_index_body_last_page =
       {'page':2,'total':1,'last_page':true,'activities':
         [
-          {'id':3,'start_time': 1602363679 },
-          {'id':4,'start_time': 33160050807 }
+          {'id':3,'start_time': 1.hour.ago.to_i },
+          {'id':4,'start_time': 1.hour.since.to_i },
+          {'id':5,'start_time': 1.day.since.to_i }
         ]
       }.to_json
 
@@ -24,16 +25,21 @@ class EventFetchTest < ActiveSupport::TestCase
 
   test "fetches and removes dates > today " do
     assert_equal 3, @response.size
+    @response.each do |event|
+      assert event["start"] < Time.now
+    end
   end
 
   test "fetches and reverse orders remaining by date" do
     assert_equal [3,2,1], @response.map{ |i| i["id"] }
+    assert_equal @response, @response.sort_by { |h| h["start"] }.reverse
   end
 
   test "get activity detail" do
-    stub_request(:get, "#{API_URL}/activities/1").to_return(status: 200, headers: {"Content-Type"=> "application/json"}, body: '')
+    stub_request(:get, "#{API_URL}/activities/1").to_return(status: 200, headers: {"Content-Type"=> "application/json"}, body: '{"activity": {"id": 1 } }')
     response = EventFetch.get_one_event(1)
     assert_equal 200, response.code
+    assert_equal 1, response["activity"]["id"]
   end
 
 end
