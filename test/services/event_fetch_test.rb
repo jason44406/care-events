@@ -36,9 +36,10 @@ class EventFetchTest < ActiveSupport::TestCase
   end
 
   test "get activity detail" do
-    stub_request(:get, "#{API_URL}/activities/1").to_return(status: 200, headers: {"Content-Type"=> "application/json"}, body: '')
+    stub_request(:get, "#{API_URL}/activities/1").to_return(status: 200, headers: {"Content-Type"=> "application/json"}, body: '{"activity": {"id": 1 } }')
     response = EventFetch.get_one_event(1)
     assert_equal 200, response.code
+    assert_equal 1, response["activity"]["id"]
   end
 
 end
